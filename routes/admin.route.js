@@ -6,3 +6,4 @@ const { verifyToken , isAdmin } = require("../middlewares/authentication.js");
 router.post("/create-package", verifyToken , isAdmin , adminController.packageCreation);
 
 module.exports = router;
+origin 
