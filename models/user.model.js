@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["user", "admin"], default: "user" },
   otp: { type: String },
   otpExpires: { type: Date },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const userModel = mongoose.model("User", userSchema);
 module.exports = userModel;
-  

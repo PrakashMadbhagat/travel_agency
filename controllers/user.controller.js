@@ -6,9 +6,8 @@ const jwt = require("jsonwebtoken");
 const session = require("express-session");
 
 const registeration = async (req, res) => {
-  console.log("hii");
   try {
-    let { fullName, email, password, confirmPassword, phoneNumber } = req.body;
+    let { fullName, email, password, confirmPassword, phoneNumber , role} = req.body;
     console.log(req.body);
     if (!fullName || !email || !password || !confirmPassword || !phoneNumber) {
       return res.status(400).json({ msg: "Please enter all fields" });
@@ -34,6 +33,7 @@ const registeration = async (req, res) => {
       email: email.toLowerCase(),
       phoneNumber,
       password: hashedPassword,
+      role
     });
 
     await newUser.save();
@@ -135,4 +135,13 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { registeration, loginUser, forgotPassword, verifyOtp, resetPassword };
+const logout = async (req, res) => {
+  try {
+    req.session.destroy();
+    res.status(200).json({ message: "Logout successful." });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging out.", error: error.message });
+  }
+};
+
+module.exports = { registeration, loginUser, forgotPassword, verifyOtp, resetPassword , logout };
