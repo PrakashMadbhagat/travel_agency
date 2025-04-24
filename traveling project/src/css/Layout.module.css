@@ -1,0 +1,18 @@
+.layoutWrapper {
+    display: flex;
+  }
+  
+  .layoutMain {
+    margin-left: 220px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .outletContent {
+    flex: 1;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
