@@ -1,0 +1,59 @@
+/* src/css/BookingTable.module.css */
+.tableContainer {
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 20px 0;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  .table thead {
+    background-color: #f4f4f4;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .pending {
+    background-color: #f0ad4e;
+  }
+  
+  .completed {
+    background-color: #5cb85c;
+  }
+  
+  .cancelled {
+    background-color: #d9534f;
+  }
+  
+  .actionBtn {
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .actionBtn:hover {
+    background-color: #5a32a3;
+  }
+  
