@@ -11,7 +11,7 @@
 - **POST /user/logout** - Logout user
 
 ### Booking
-- **POST /user/create-trip** - Create a new trip booking
+- **POST /user/booking** - User booking
 
 ## Admin Routes
 
