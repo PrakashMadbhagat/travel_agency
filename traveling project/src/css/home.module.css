@@ -1,0 +1,26 @@
+
+
+:root{
+    --dark:#000;
+}
+*{
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+a {
+    text-decoration: none !important;
+    color: var(--dark) !important;
+}
+.traveller_img {
+    height: 300px;
+}
+.blogs{
+    padding-top:50px;
+    padding-bottom: 50px;
+     /* background-color: white; */
+}
+
+
+
