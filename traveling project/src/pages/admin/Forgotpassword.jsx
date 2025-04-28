@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import BASE_URL from '../api';
+import API from '../../api'; 
+
 
 const SetPassword = () => {
   const [password, setPassword] = useState('');
@@ -28,7 +29,7 @@ const SetPassword = () => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/set-password`, {
+      const response = await fetch(`${API.BASE_URL}/set-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

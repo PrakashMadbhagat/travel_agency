@@ -6,6 +6,7 @@ const tripSchema = new mongoose.Schema({
     tripName : { type: String , required: true },
     discription : { type: String , required: true },
     price : { type: Number , required: true },
+    personLimitation : { type: Number , required: true },
     createdAt: { type: Date, default: Date.now },
 });
 

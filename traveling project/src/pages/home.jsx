@@ -3,6 +3,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import TripCard from '../components/Trip';
 export const Home = () => {
     const blogPosts = [
         {
@@ -77,6 +78,18 @@ export const Home = () => {
         autoplay: true,
         autoplaySpeed: 3000,
     };
+
+
+    const tripData = {
+        img: "https://res.cloudinary.com/dy8u2nnsp/image/upload/v1743184316/event_images/Screenshot%20%287%29.png",
+        tripName: "Manali",
+        discription: "The journey to Manali itself is breathtaking, with winding roads, pine forests, and the Beas River accompanying you along the way...",
+        price: 19999,
+        personLimitation: 50,
+        _id: "680cb1091d9276db540208db",
+        createdAt: "2025-04-26T10:10:17.393Z",
+        __v: 0
+      };
     
     return (
         <>
@@ -402,6 +415,14 @@ export const Home = () => {
                         </div>
                     </div>
                 </div>
+            </section>
+            {/* trip */}
+            <section>
+            <div className="container my-5">
+      <div className="row">
+        <TripCard trip={tripData} />
+      </div>
+    </div>
             </section>
             {/* contact */}
             <section className={`${styles.contect} py-3 mt-4`}>

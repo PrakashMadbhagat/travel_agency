@@ -94,7 +94,7 @@ const forgotPassword = async (req, res) => {
           </header>
 
           <section style="font-size: 16px; line-height: 1.6;">
-            <p>Hello <strong>${user}</strong>,</p>
+            <p>Hello <strong>Admin</strong>,</p>
             <p>We have received a request to reset your password. Your One-Time Password (OTP) for the password reset is:</p>
 
             <div style="background-color: #f1f1f1; padding: 15px; font-size: 1.5em; font-weight: bold; color: #333; text-align: center; border-radius: 5px;">
