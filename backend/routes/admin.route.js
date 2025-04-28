@@ -8,7 +8,7 @@ router.put("/setting", upload.single('profilePic') , verifyToken , isAdmin , adm
 router.post("/create-trip", upload.single('img') , verifyToken , isAdmin , adminController.tripCreation);
 router.get("/booking-get" , verifyToken , isAdmin , adminController.getBooking)
 router.get("/hotel-get" , verifyToken , isAdmin , adminController.getHotel)
-router.get("/flight-get" , verifyToken , isAdmin , adminController.getFlight)
+router.get("/bus-get" , verifyToken , isAdmin , adminController.getBus)
 router.get("/car-get" , verifyToken , isAdmin , adminController.getCar)
 
 module.exports = router;

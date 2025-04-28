@@ -5,7 +5,7 @@ const bookingSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Hotel", "Flight", "Car Rental"],
+    enum: ["Hotel", "Bus", "Car Rental"],
   },
 
   // New fields
@@ -21,13 +21,6 @@ const bookingSchema = new mongoose.Schema({
   child: { type: Number },
   amount: { type: Number },
 
-  // Flight fields
-  from: { type: String },
-  to: { type: String },
-  seat: { type: Number },
-
-  // Car rental fields
-  passengers: { type: Number },
   createdAt: { type: Date, default: Date.now },
 });
 

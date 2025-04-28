@@ -20,13 +20,13 @@ const setting = async (req, res) => {
 
     const updateData = {};
 
-    if (fullName) {
+    if (fullName && fullName.trim() !== "") {
       updateData.fullName = fullName;
     }
 
     if (file && file.path) {
-      const result = await cloudinary.uploader.upload(file.path);
-      updateData.profilePic = result.secure_url;
+      const uploadResult = await cloudinary.uploader.upload(file.path);
+      updateData.profilePic = uploadResult.secure_url;
     }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
@@ -38,15 +38,16 @@ const setting = async (req, res) => {
       profile: updatedUser,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error updating profile.", error: error.message});
+    console.error(error);
+    res.status(500).json({ message: "Error updating profile.", error: error.message });
   }
 };
 
 const tripCreation = async (req, res) => {
   try {
     const img = req.file ? req.file.path : null;
-    const { tripName, discription, price } = req.body;
-    const newTrip = new Trip({ img : img, tripName, discription, price , adminId : req.user.id});
+    const { tripName, discription, price , personLimitation} = req.body;
+    const newTrip = new Trip({ img : img, tripName, discription, price , personLimitation , adminId : req.user.id});
     await newTrip.save();
     res.status(201).json(newTrip);
   } catch (error) {
@@ -72,9 +73,9 @@ const getHotel = async (req, res) => {
   }
 };
 
-const getFlight = async (req, res) => {
+const getBus = async (req, res) => {
   try {
-    const flight = await Booking.find({category : "Flight"});
+    const flight = await Booking.find({category : "Bus"});
     res.status(200).json(flight);
   } catch (error) {
     res.status(400).json({ message : "trip error" , error: error.message });
@@ -90,4 +91,4 @@ const getCar = async (req, res) => {
   }
 };
 
-module.exports = { setting , tripCreation , getBooking , getHotel , getFlight , getCar };
+module.exports = { setting , tripCreation , getBooking , getHotel , getBus , getCar };
