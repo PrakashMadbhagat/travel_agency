@@ -82,6 +82,9 @@ const forgotPassword = async (req, res) => {
     req.session.email = email;
     req.session.otp = otp;
     req.session.otpExpires = otpExpires;
+    req.session.save(); 
+    
+    console.log("OTP:", otp);
 
     const subject = "Password Reset OTP - TravelGo";
 

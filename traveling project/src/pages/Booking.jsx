@@ -3,18 +3,20 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import "react-calendar/dist/Calendar.css";
 import Styles from "../css/booking.module.css";
+import API from "../api/index"; // Make sure this path is correct
 
 const Booking = () => {
   const [step, setStep] = useState(1);
   const [destinations, setDestinations] = useState([]);
+  const [loadingDestinations, setLoadingDestinations] = useState(false);
   const [formData, setFormData] = useState({
     bookingType: "hotel",
     destination_code: "",
     destination: "",
     checkinTime: "",
     checkoutTime: "",
-    adult: "",
-    child: "",
+    adult: "1",
+    child: "0",
     fullName: "",
     email: "",
     phone: "",
@@ -31,27 +33,79 @@ const Booking = () => {
 
   const handlePincodeChange = async (e) => {
     const pincode = e.target.value;
+    handleInputChange(e);
     if (pincode.length === 6) {
+      setLoadingDestinations(true);
       try {
         const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
         const data = await response.json();
-        setDestinations(data[0]?.PostOffice || []);
+        if (data[0]?.Status === "Success") {
+          setDestinations(data[0]?.PostOffice || []);
+        } else {
+          setDestinations([]);
+          alert("No destinations found for this pincode.");
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching destinations:", error);
+        alert("Failed to fetch destinations. Please try again later.");
+        setDestinations([]);
+      } finally {
+        setLoadingDestinations(false);
       }
     }
-    handleInputChange(e);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Booking Confirmed:", formData);
-    setStep(4);
+
+    const amount = parseInt(formData.adult) * 1000 + parseInt(formData.child) * 500;
+
+    // ✅ Corrected category mapping to match backend expectations
+    const categoryMap = {
+      hotel: "Hotel",
+      Cabs: "Car Rental",
+      crus: "Cruise",
+    };
+
+    const payload = {
+      category: categoryMap[formData.bookingType],
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      destination: formData.destination,
+      checkIn: new Date(formData.checkinTime).toISOString().split("T")[0],
+      checkOut: new Date(formData.checkoutTime).toISOString().split("T")[0],
+      adult: parseInt(formData.adult),
+      child: parseInt(formData.child),
+      amount: amount,
+    };
+
+    try {
+      const response = await fetch(`${API.BASE_URL}/user/booking`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      console.log("Backend response:", result);
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to submit booking");
+      }
+
+      setStep(4); // Show success screen
+    } catch (error) {
+      console.error("Booking submission error:", error);
+      alert("Failed to submit booking. Please try again.");
+    }
   };
 
   const bookingHeadings = {
     hotel: "Hotel Booking",
-    Cabs: "Cabs Booking",
+    Cabs: "Car Rental",
     crus: "Cruise Booking",
   };
 
@@ -59,7 +113,6 @@ const Booking = () => {
     <div className="container py-5">
       <h2 className="text-center mb-4 mt-5">Booking Form</h2>
 
-      {/* Step Indicators */}
       <div className="mb-4 text-center">
         {["Select Plan", "Your Info", "Payment", "Success"].map((label, index) => (
           <span
@@ -72,7 +125,6 @@ const Booking = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* Step 1: Booking Type and Destination */}
         {step === 1 && (
           <>
             <h4 className="mb-4 text-center text-capitalize">
@@ -108,18 +160,22 @@ const Booking = () => {
 
             <div className="mb-3">
               <label>Select Destination</label>
-              <select
-                name="destination"
-                className="form-select"
-                onChange={handleInputChange}
-              >
-                <option value="">Select destination</option>
-                {destinations.map((item, index) => (
-                  <option key={index} value={item.Name}>
-                    {item.Name}
-                  </option>
-                ))}
-              </select>
+              {loadingDestinations ? (
+                <p>Loading...</p>
+              ) : (
+                <select
+                  name="destination"
+                  className="form-select"
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select destination</option>
+                  {destinations.map((item, index) => (
+                    <option key={index} value={item.Name}>
+                      {item.Name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div className="mb-3">
@@ -134,8 +190,7 @@ const Booking = () => {
 
             <div className="mb-3">
               <label>Adults</label>
-              <select name="adult" className="form-select" onChange={handleInputChange}>
-                <option value="">Select adults</option>
+              <select name="adult" className="form-select" onChange={handleInputChange} value={formData.adult}>
                 {[1, 2, 3, 4, 5].map((num) => (
                   <option key={num} value={num}>
                     {num}
@@ -146,8 +201,7 @@ const Booking = () => {
 
             <div className="mb-3">
               <label>Children</label>
-              <select name="child" className="form-select" onChange={handleInputChange}>
-                <option value="">Select children</option>
+              <select name="child" className="form-select" onChange={handleInputChange} value={formData.child}>
                 {[0, 1, 2, 3, 4].map((num) => (
                   <option key={num} value={num}>
                     {num}
@@ -156,13 +210,17 @@ const Booking = () => {
               </select>
             </div>
 
-            <button type="button" onClick={() => setStep(2)} className="btn btn-primary w-100">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="btn btn-primary w-100"
+              disabled={!formData.destination || !formData.checkinTime || !formData.checkoutTime}
+            >
               Continue
             </button>
           </>
         )}
 
-        {/* Step 2: User Info */}
         {step === 2 && (
           <>
             <div className="mb-3">
@@ -197,6 +255,7 @@ const Booking = () => {
                 className="form-control"
                 value={formData.phone}
                 onChange={handleInputChange}
+                pattern="[0-9]{10}"
                 required
               />
             </div>
@@ -212,12 +271,10 @@ const Booking = () => {
           </>
         )}
 
-        {/* Step 3: Payment */}
         {step === 3 && (
           <>
             <h4>Mock Payment</h4>
-            <p>Total: ₹{(formData.adult * 1000) + (formData.child * 500)}</p>
-
+            <p>Total: ₹{parseInt(formData.adult) * 1000 + parseInt(formData.child) * 500}</p>
             <div className="d-flex justify-content-between">
               <button type="button" onClick={() => setStep(2)} className="btn btn-secondary">
                 Back
@@ -229,7 +286,6 @@ const Booking = () => {
           </>
         )}
 
-        {/* Step 4: Success */}
         {step === 4 && (
           <div className="text-center">
             <h3 className="text-success">🎉 Booking Confirmed!</h3>
