@@ -10,6 +10,7 @@ import AdminLayout from "./components/admin/Layout";
 import LoginLayout from "./components/admin/LoginLayout";
 import SetPassword from './pages/admin/Forgotpassword'
 import Dashboard  from "./pages/admin/Dashboard";
+import AdminProfile from "./pages/admin/AdminProfile";
 
 
 const router = createBrowserRouter([
@@ -36,7 +37,9 @@ const router = createBrowserRouter([
     element : <AdminLayout/>,
     children : [
       {path : '/admin', element : <Dashboard/>},
-      {path : '/admin/Dashboard', element : <Dashboard/>}
+      {path : '/admin/Dashboard', element : <Dashboard/>},
+      {path : '/admin/Profile', element : <AdminProfile/>}
+
     ]
   }
 ]);
