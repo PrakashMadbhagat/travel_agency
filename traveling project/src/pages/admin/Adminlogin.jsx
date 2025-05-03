@@ -83,39 +83,40 @@ const AdminLogin = () => {
     }
   };
   
-  // Handle OTP submission
   const handleOtpSubmit = async () => {
-    if (otp) {
-      try {
-        // Step 3: Submit the OTP to the backend for verification
-        const otpResponse = await fetch(`${API.BASE_URL}/user/verify-otp`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: adminEmail, otp }),
-        });
-
-        const otpData = await otpResponse.json();
-
-        if (otpResponse.ok) {
-          console.log('OTP submitted successfully:', otp);
-          alert('OTP verified successfully!');
-          setShowPopup(false); // Close the popup after submission
-          navigate('/admin/set-new-password'); // Navigate to password reset page (or any action)
-        } else {
-          console.error('OTP verification failed:', otpData.message || 'Unknown error');
-          alert(otpData.message || 'OTP verification failed');
-        }
-      } catch (error) {
-        console.error('Network error:', error.message);
-        alert('Network error during OTP verification, please try again');
-      }
-    } else {
+    if (!otp) {
       alert('Please enter the OTP');
+      return;
+    }
+  
+    try {
+      const otpResponse = await fetch(`${API.BASE_URL}/user/verify-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: adminEmail, otp }), // Send both email and otp
+      });
+  
+      const otpData = await otpResponse.json(); // Parse the response body as JSON
+  
+      if (otpResponse.ok) {
+        console.log('OTP submitted successfully:', otp);
+        alert('OTP verified successfully!');
+        setShowPopup(false);
+        navigate('/admin/set-new-password'); // Navigate on success
+      } else {
+        console.error('OTP verification failed:', otpData.message || 'Unknown error');
+        alert(otpData.message || 'OTP verification failed');
+      }
+    } catch (error) {
+      console.error('Network error:', error.message);
+      alert('Network error during OTP verification, please try again');
     }
   };
-
+  
+  
+  
 
   // otp submit 
   

@@ -18,7 +18,6 @@ const booking = async (req, res) => {
     }
 
     const newBooking = new Booking({
-      userId: req.user.id,
       category,
       fullName,
       email,
